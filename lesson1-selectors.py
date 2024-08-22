@@ -4,9 +4,9 @@ from  selenium.webdriver.common.by import By
 
 driver = webdriver.Chrome()
 
-time.sleep(5)
+time.sleep(2)
 
-driver.get("https://suninjuly.github.io/text_input_task.html")
+driver.get("http://suninjuly.github.io/cats.html")
 
 time.sleep(5)
 
