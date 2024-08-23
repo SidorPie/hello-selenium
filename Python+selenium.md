@@ -157,3 +157,14 @@ button = WebDriverWait(browser, 5).until_not(
 	EC.element_to_be_clickable((By.ID, "verify"))
 )
 ```
+
+## Ссылки
+https://barancev.github.io/good-locators/
+https://www.selenium.dev/documentation/webdriver/waits/
+https://stackoverflow.com/questions/15122864/selenium-wait-until-document-is-ready
+https://www.cloudbees.com/blog/get-selenium-to-wait-for-page-load
+https://barancev.github.io/slow-loading-pages/
+https://barancev.github.io/page-loading-complete/
+https://selenium-python.readthedocs.io/api.html#module-selenium.webdriver.support.expected_conditions
+https://developer.mozilla.org/ru/docs/Web/API/Element/scrollIntoView
+https://flukeout.github.io/
