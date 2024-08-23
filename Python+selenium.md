@@ -168,3 +168,5 @@ https://barancev.github.io/page-loading-complete/
 https://selenium-python.readthedocs.io/api.html#module-selenium.webdriver.support.expected_conditions
 https://developer.mozilla.org/ru/docs/Web/API/Element/scrollIntoView
 https://flukeout.github.io/
+
+#  unittest и PyTest
