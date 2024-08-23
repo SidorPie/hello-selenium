@@ -68,3 +68,92 @@ input[required]
 ```
 
 ### get_attribute()
+```python
+robots_radio = browser.find_element(By.ID, "robotsRule")
+robots_checked = robots_radio.get_attribute("checked")
+assert robots_checked is None
+```
+
+### Списки
+```html
+<label for="dropdown">Выберите язык программирования:</label>
+	<select id="dropdown" class="custom-select">
+	<option selected>--</option>
+	<option value="1">Python</option>
+	<option value="2">Java</option>
+	<option value="3">JavaScript</option>
+</select>
+
+```
+```python
+from selenium.webdriver.support.ui import Select
+select = Select(browser.find_element(By.TAG_NAME, "select"))
+select.select_by_value("1") # ищем элемент с текстом "Python"
+```
+### execute_script("JS arguments[]",arg)
+```python
+browser.execute_script("window.scrollBy(0, 100);")
+browser.execute_script("alert('Robots at work');")
+browser.execute_script("document.title='Script executing';alert('Robots at work');")
+browser.execute_script("return arguments[0].scrollIntoView(true);", checkbox_label_elem)
+```
+
+### Загрузка файлов
+
+```python
+uploat = browser.find_element(By.CSS_SELECTOR,"#file")
+current_dir = os.path.abspath(os.path.dirname(__file__))    # получаем путь к директории текущего исполняемого файла 
+file_path = os.path.join(current_dir, 'upload.txt')
+uploat.send_keys(file_path)
+```
+
+### Модальные окна
+#### Alert
+```python
+alert = browser.switch_to.alert
+alert.accept()
+```
+```pyton
+alert = browser.switch_to.alert
+alert_text = alert.text
+```
+#### Confirm
+```python
+confirm = browser.switch_to.alert
+confirm.accept()
+confirm.dismiss()
+```
+#### Prompt
+```python
+prompt = browser.switch_to.alert
+prompt.send_keys("My answer")
+prompt.accept()
+```
+
+### Переход на новую вкладку
+`browser.switch_to.window(window_name)`
+`new_window = browser.window_handles[1]`
+`first_window = browser.window_handles[0]`
+
+### Настройка ожиданий
+#### Implicit
+```python
+link = "http://suninjuly.github.io/wait2.html"
+browser = webdriver.Chrome()
+browser.implicitly_wait(5)
+browser.get(link)
+```
+#### Explicit
+```python
+# говорим Selenium проверять в течение 5 секунд, пока кнопка не станет кликабельной
+button = WebDriverWait(browser, 5).until(
+        EC.element_to_be_clickable((By.ID, "verify"))
+    )
+button.click()
+```
+```python
+# говорим Selenium проверять в течение 5 секунд пока кнопка станет неактивной
+button = WebDriverWait(browser, 5).until_not(
+	EC.element_to_be_clickable((By.ID, "verify"))
+)
+```
