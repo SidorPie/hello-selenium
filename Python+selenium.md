@@ -170,3 +170,41 @@ https://developer.mozilla.org/ru/docs/Web/API/Element/scrollIntoView
 https://flukeout.github.io/
 
 #  unittest и PyTest
+`assert abs(-42) == 42`
+`print(f"Let's count together: {str1}, then goes {str2}, and then {str3}")`
+
+```python
+catalog_text = self.catalog_link.text # считываем текст и записываем его в переменную
+assert catalog_text == "Каталог", \
+    f"Wrong language, got {catalog_text} instead of 'Каталог'"  
+```
+
+```python
+def test_substring(full_string, substring):
+    # ваша реализация, напишите assert и сообщение об ошибке
+    assert substring in full_string, f"expected '{substring}' to be substring of '{full_string}'"
+```
+
+```python
+def test_input_text(expected_result, actual_result):
+    # ваша реализация, напишите assert и сообщение об ошибке
+    assert expected_result == actual_result, \
+        f"expected {expected_result}, got {actual_result}"
+```
+https://docs.python.org/3/library/unittest.html
+### Фиксируем пакеты в requirements.txt 
+Создадим виртуальное окружение:`$ python3 -m venv selenium_env`
+Активируем окружение: `$ source selenium_env/bin/activate` .bat
+
+`pip freeze > requirements.txt`
+`pip install -r requirements.txt`
+### pytest commands
+https://gist.github.com/amatellanes/12136508b816469678c2
+
+### PyTest фикстурs
+фикстуры - декоратор для функций инициализаторов и финализаторов. Могут содержать инициализацию данных или браузера и очистку данных или корректное закрытие. начальные и финальные действия разделяются оператором yield, код после которого выполнится после выполнения теста, использующего эту фикстуру.
+
+`@pytest.fixture(scope="class")` - выполнится один раз для класса. Можно один раз инициализировать браузер для нескольких тестов
+`@pytest.fixture(autouse=True)` - выполнится перед каждым тестом
+https://habr.com/ru/companies/yandex/articles/242795/
+https://docs.pytest.org/en/stable/explanation/fixtures.html
