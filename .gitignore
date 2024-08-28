@@ -427,5 +427,7 @@ out/
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
+
 .idea/.idea.WhOffBalance/.idea/inspectionProfiles/Project_Default.xml
 .idea/.idea.WhOffBalance/.idea/.name
+*_env
