@@ -306,8 +306,9 @@ def test_guest_should_see_login_link(browser):
 `pytest -v --tb=line --reruns 1 --browser_name=chrome test_rerun.py`
 
 ## Запуск автотестов для разных языков интерфейса
-https://stepik.org/lesson/237240/step/9?unit=209628
-решить - https://stepik.org/lesson/237240/step/10?unit=209628
+
 
 Полезные ссылки
 https://stepik.org/lesson/237258/step/1?unit=209646
+
+## Page Object
