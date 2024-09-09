@@ -193,8 +193,8 @@ def test_input_text(expected_result, actual_result):
 ```
 https://docs.python.org/3/library/unittest.html
 ### Фиксируем пакеты в requirements.txt 
-Создадим виртуальное окружение:`$ python3 -m venv selenium_env`
-Активируем окружение: `$ source selenium_env/bin/activate` .bat
+Создадим виртуальное окружение:`$ python -m venv selenium_env`
+Активируем окружение: `$ source selenium_env/bin/activate.bat` 
 
 `pip freeze > requirements.txt`
 `pip install -r requirements.txt`
@@ -312,3 +312,30 @@ def test_guest_should_see_login_link(browser):
 https://stepik.org/lesson/237258/step/1?unit=209646
 
 ## Page Object
+Обычно методы у Page Object бывают двух типов: сделать что-то и проверить что-то.
+`pytest -s -m login .\test_main_page.py`
+
+```python
+@pytest.mark.login
+class TestLoginFromProductPage():
+    @pytest.fixture(scope="function", autouse=True)
+    def setup(self):
+        self.product = ProductFactory(title = "Best book created by robot")
+        # создаем по апи
+        self.link = self.product.link
+        yield
+        # после этого ключевого слова начинается teardown
+        # выполнится после каждого теста в классе
+        # удаляем те данные, которые мы создали 
+        self.product.delete()
+        
+
+    def test_guest_can_go_to_login_page_from_product_page(self, browser):
+        page = ProductPage(browser, self.link)
+        # дальше обычная реализация теста
+
+    def test_guest_should_see_login_link(self, browser):
+        page = ProductPage(browser, self.link)
+        # дальше обычная реализация теста
+
+```
