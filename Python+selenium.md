@@ -168,3 +168,174 @@ https://barancev.github.io/page-loading-complete/
 https://selenium-python.readthedocs.io/api.html#module-selenium.webdriver.support.expected_conditions
 https://developer.mozilla.org/ru/docs/Web/API/Element/scrollIntoView
 https://flukeout.github.io/
+
+#  unittest и PyTest
+`assert abs(-42) == 42`
+`print(f"Let's count together: {str1}, then goes {str2}, and then {str3}")`
+
+```python
+catalog_text = self.catalog_link.text # считываем текст и записываем его в переменную
+assert catalog_text == "Каталог", \
+    f"Wrong language, got {catalog_text} instead of 'Каталог'"  
+```
+
+```python
+def test_substring(full_string, substring):
+    # ваша реализация, напишите assert и сообщение об ошибке
+    assert substring in full_string, f"expected '{substring}' to be substring of '{full_string}'"
+```
+
+```python
+def test_input_text(expected_result, actual_result):
+    # ваша реализация, напишите assert и сообщение об ошибке
+    assert expected_result == actual_result, \
+        f"expected {expected_result}, got {actual_result}"
+```
+https://docs.python.org/3/library/unittest.html
+### Фиксируем пакеты в requirements.txt 
+Создадим виртуальное окружение:`$ python -m venv selenium_env`
+Активируем окружение: `$ source selenium_env/bin/activate.bat` 
+
+`pip freeze > requirements.txt`
+`pip install -r requirements.txt`
+### pytest commands
+https://gist.github.com/amatellanes/12136508b816469678c2
+
+### PyTest фикстурs
+фикстуры - декоратор для функций инициализаторов и финализаторов. Могут содержать инициализацию данных или браузера и очистку данных или корректное закрытие. начальные и финальные действия разделяются оператором yield, код после которого выполнится после выполнения теста, использующего эту фикстуру.
+
+`@pytest.fixture(scope="class")` - выполнится один раз для класса. Можно один раз инициализировать браузер для нескольких тестов
+`@pytest.fixture(autouse=True)` - выполнится перед каждым тестом
+https://habr.com/ru/companies/yandex/articles/242795/
+https://docs.pytest.org/en/stable/explanation/fixtures.html
+
+
+## Маркировка тестов
+`@pytest.mark.smoke`
+`@pytest.mark.regression`
+`pytest -s -v -m smoke test_fixture8.py`
+`pytest -s -v -m smoke test_fixture8.py -q --tb=no -p no:warnings`
+`pytest -s -v -m "not smoke" test_fixture8.py`
+`pytest -s -v -m "smoke or regression" test_fixture8.py`
+
+pytest.ini:
+```
+[pytest]
+markers =
+    smoke: marker for smoke tests
+    regression: marker for regression tests
+```
+
+`@pytest.mark.skip` - пропустить тест при сборе тестов для запуска (то есть не запускать тест) или запустить, но отметить особенным статусом тот тест, который ожидаемо упадёт из-за наличия бага, чтобы он не влиял на результаты прогона всех тестов.
+`@pytest.mark.xfail(reason="fixing this bug right now")` - Пока разработчики исправляют баг, мы хотим, чтобы результат прогона всех наших тестов был успешен, но падающий тест помечался соответствующим образом, чтобы про него не забыть. Запуск: `pytest -rx -v test_fixture10a.py`
+
+## конфигурация тестов
+conftest.py
+```python
+import pytest
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+@pytest.fixture(scope="function")
+def browser():
+    print("\nstart browser for test..")
+    browser = webdriver.Chrome()
+    yield browser
+    print("\nquit browser..")
+    browser.quit()
+```
+test_conftest.py
+```python
+from selenium.webdriver.common.by import By
+
+link = "http://selenium1py.pythonanywhere.com/"
+
+def test_guest_should_see_login_link(browser):
+    browser.get(link)
+    browser.find_element(By.CSS_SELECTOR, "#login_link")
+```
+## Параметризация тестов
+`@pytest.mark.parametrize('language', ["ru", "en-gb"])`
+https://docs.pytest.org/en/latest/how-to/parametrize.html
+Можно параметризовать и класс, тогда во все тестовые функции надо передавать еще и параметр
+
+
+## Conftest.py и передача параметров в командной строке
+Conftest.py
+```python
+import pytest
+from selenium import webdriver
+
+def pytest_addoption(parser):
+    parser.addoption('--browser_name', action='store', default=None,
+                     help="Choose browser: chrome or firefox")
+
+
+@pytest.fixture(scope="function")
+def browser(request):
+    browser_name = request.config.getoption("browser_name")
+    browser = None
+    if browser_name == "chrome":
+        print("\nstart chrome browser for test..")
+        browser = webdriver.Chrome()
+    elif browser_name == "firefox":
+        print("\nstart firefox browser for test..")
+        browser = webdriver.Firefox()
+    else:
+        raise pytest.UsageError("--browser_name should be chrome or firefox")
+    yield browser
+    print("\nquit browser..")
+    browser.quit()
+```
+test_parser.py
+```python
+link = "http://selenium1py.pythonanywhere.com/"
+
+
+def test_guest_should_see_login_link(browser):
+    browser.get(link)
+    browser.find_element(By.CSS_SELECTOR, "#login_link")
+```
+команды запуска 
+`pytest -s -v --browser_name=chrome test_parser.py`
+`pytest -s -v --browser_name=firefox test_parser.py`
+
+## Плагины и перезапуск тестов
+`pip install pytest-rerunfailures`
+
+`pytest -v --tb=line --reruns 1 --browser_name=chrome test_rerun.py`
+
+## Запуск автотестов для разных языков интерфейса
+
+
+Полезные ссылки
+https://stepik.org/lesson/237258/step/1?unit=209646
+
+## Page Object
+Обычно методы у Page Object бывают двух типов: сделать что-то и проверить что-то.
+`pytest -s -m login .\test_main_page.py`
+
+```python
+@pytest.mark.login
+class TestLoginFromProductPage():
+    @pytest.fixture(scope="function", autouse=True)
+    def setup(self):
+        self.product = ProductFactory(title = "Best book created by robot")
+        # создаем по апи
+        self.link = self.product.link
+        yield
+        # после этого ключевого слова начинается teardown
+        # выполнится после каждого теста в классе
+        # удаляем те данные, которые мы создали 
+        self.product.delete()
+        
+
+    def test_guest_can_go_to_login_page_from_product_page(self, browser):
+        page = ProductPage(browser, self.link)
+        # дальше обычная реализация теста
+
+    def test_guest_should_see_login_link(self, browser):
+        page = ProductPage(browser, self.link)
+        # дальше обычная реализация теста
+
+```
